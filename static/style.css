@@ -91,3 +91,10 @@ body { margin: 0; background: var(--bg); color: var(--text); display: flex; min-
   .menu-toggle { display: block; }
   .content { padding: 16px; }
 }
+
+/* Server cards sit inside a panel: header row, recessed card background */
+.panel-header { display: flex; align-items: baseline; justify-content: space-between;
+                padding-bottom: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+.panel-header h2 { margin: 0; }
+.panel .cards { margin-bottom: 0; }
+.panel .namecard { background: var(--bg); }

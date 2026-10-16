@@ -37,7 +37,12 @@
   {% endif %}
 </section>
 
-  <section class="cards">
+<section class="panel">
+  <div class="panel-header">
+    <h2>Servers</h2>
+    <span class="muted">{{ servers | length }} found</span>
+  </div>
+  <div class="cards">
     {% for s in servers %}
       <a class="card namecard" href="{{ url_for('dashboard.server', name=s.name) }}">
         <div class="card-value">{{ s.name }}</div>
@@ -46,8 +51,8 @@
     {% else %}
       <p class="muted">No servers found in {{ settings.servers_folder }}</p>
     {% endfor %}
-  </section>
-  
+  </div>
+</section>
 {% endblock %}
 
 {% block scripts %}
