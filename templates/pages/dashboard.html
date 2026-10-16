@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block actions %}
+  <span class="muted" id="updated">Updated {{ stats.time }}</span>
+{% endblock %}
+
+{% block content %}
+<section class="cards">
+  <div class="card">
+    <div class="card-label">Host</div>
+    <div class="card-value">{{ stats.hostname }}</div>
+    <div class="card-sub">{{ stats.system }}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">CPU load (1 / 5 / 15 min)</div>
+    <div class="card-value" id="load">{{ stats.load | join(" / ") }}</div>
+    <div class="card-sub">{{ stats.cpu_count }} cores</div>
+  </div>
+
+  {% if stats.memory %}
+  <div class="card">
+    <div class="card-label">Memory</div>
+    <div class="card-value" id="mem-pct">{{ stats.memory.percent }}%</div>
+    <div class="bar"><div class="bar-fill" id="mem-bar" style="width: {{ stats.memory.percent }}%"></div></div>
+    <div class="card-sub">{{ stats.memory.used | filesizeformat(true) }} of {{ stats.memory.total | filesizeformat(true) }}</div>
+  </div>
+  {% endif %}
+
+  {% if settings.show_disk %}
+  <div class="card">
+    <div class="card-label">Disk (/)</div>
+    <div class="card-value" id="disk-pct">{{ stats.disk.percent }}%</div>
+    <div class="bar"><div class="bar-fill" id="disk-bar" style="width: {{ stats.disk.percent }}%"></div></div>
+    <div class="card-sub">{{ stats.disk.used | filesizeformat(true) }} of {{ stats.disk.total | filesizeformat(true) }}</div>
+  </div>
+  {% endif %}
+</section>
+
+  <section class="cards">
+    {% for s in servers %}
+      <a class="card namecard" href="{{ url_for('dashboard.server', name=s.name) }}">
+        <div class="card-value">{{ s.name }}</div>
+        <div class="card-sub namecard-path">{{ s.path }}</div>
+      </a>
+    {% else %}
+      <p class="muted">No servers found in {{ settings.servers_folder }}</p>
+    {% endfor %}
+  </section>
+  
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const refreshMs = {{ settings.refresh_seconds | int }} * 1000;
+  async function refresh() {
+    try {
+      const s = await (await fetch("{{ url_for('dashboard.api_stats') }}")).json();
+      const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+      const bar = (id, p) => { const el = document.getElementById(id); if (el) el.style.width = p + "%"; };
+      set("load", s.load.join(" / "));
+      if (s.memory) { set("mem-pct", s.memory.percent + "%"); bar("mem-bar", s.memory.percent); }
+      set("disk-pct", s.disk.percent + "%"); bar("disk-bar", s.disk.percent);
+      set("updated", "Updated " + s.time);
+    } catch (e) { console.warn("refresh failed", e); }
+  }
+  if (refreshMs > 0) setInterval(refresh, refreshMs);
+</script>
+{% endblock %}

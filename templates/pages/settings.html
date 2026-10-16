@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="post" class="panel form">
+  <h2>General</h2>
+
+  <label class="field">
+    <span>App name</span>
+    <input type="text" name="app_name" value="{{ settings.app_name }}" required>
+  </label>
+
+  <label class="field">
+    <span>Theme</span>
+    <select name="theme">
+      {% for value, label in [("system", "Match system"), ("light", "Light"), ("dark", "Dark")] %}
+        <option value="{{ value }}" {{ "selected" if settings.theme == value }}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <h2>Dashboard</h2>
+
+  <label class="field">
+    <span>Auto-refresh every (seconds, 0 = off)</span>
+    <input type="number" name="refresh_seconds" min="0" max="3600" value="{{ settings.refresh_seconds }}">
+  </label>
+
+  <label class="field">
+    <span>Absolute path to server storage directory</span>
+    <input type="text" name="servers_folder" value="{{ settings.servers_folder }}">
+  </label>
+
+  <label class="check">
+    <input type="checkbox" name="show_disk" {{ "checked" if settings.show_disk }}>
+    <span>Show disk usage card</span>
+  </label>
+
+  <div class="form-actions">
+    <button type="submit" class="btn">Save settings</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,39 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python bytecode / build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Runtime data written by settings_store.py
+data/settings.json
+
+# Environment / secrets (APP_SECRET_KEY etc.)
+.env
+.env.*
+
+# Flask
+instance/
+.webassets-cache
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+servers/
